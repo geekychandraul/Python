@@ -6,14 +6,27 @@ HOME_PATH=/SunFarma/MDM/Import
 JAR_FILE_PATH=/SunPharma/MDM/jar
 CONFIG_FILE_PATH=$HOME_PATH/
 
-
+# For Veeva and HCP
 if [ $SOURCE == "VEEVA" && $ENTITY == "HCP" ]; then
     SOURCE_FILE=$HOME_PATH/veeva/FILE_NAME
-    CONFIG_FILE=$HOME_PATH/veeva/ConfigFile
-    LOG_FILE=$HOME_PATH/veeva/LogFiles
+    CONFIG_FILE=$HOME_PATH/veeva/ConfigFile/
+    LOG_FILE_PATH=$HOME_PATH/veeva/LogFiles/
+    
     if [ -f $SOURCE_FILE && -s $SOURCE_FILE ]; then
-        echo "Generating JSON file ..." >&2
-        java -jar $JAR_FILE_PATH/json_generator.jar $CONFIG_FILE | tee 
+        echo "Generating JSON file ..." > $LOG_FILE/123.log 
+        java -jar $JAR_FILE_PATH/json_generator.jar $CONFIG_FILE/hcp.config | tee $LOG_FILE_PATH/stats.log -a $LOG_FILE_PATH/123.log  
         if [ $? -eq 0 ]; then
-            echo "JSON file generated." >&2
-            java -jar $JAR_FILE_PATH/data_stat.jar hco_file 
+            echo "JSON file generated." >> $LOG_FILE/123.log 2>&1
+            echo "Generating Stats ..." >> $LOG_FILE/123.log 2>&1
+            java -jar $JAR_FILE_PATH/data_stat.jar hco_file $LOG_FILE_PATH/stats.log >> $LOG_FILE/123.log 2>&1
+            echo "Stats generated." >> $LOG_FILE/123.log 2>&1
+         else
+             echo "JSON generator Failed. Aborting the process." >> $LOG_FILE/123.log 
+             exit
+         fi
+    else
+        echo "File Error. Aborting process..." >> $LOG_FILE/123.log 
+        exit
+    fi
+    java -jar reltio-dataload-processor-2.0.2.jar $CONFIG_FILE/data_loader.config >> $LOG_FILE/123.log 2>&1
+fi
