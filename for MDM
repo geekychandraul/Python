@@ -1,0 +1,19 @@
+#!/bin/bash
+
+SOURCE=$1
+ENTITY=$2
+HOME_PATH=/SunFarma/MDM/Import
+JAR_FILE_PATH=/SunPharma/MDM/jar
+CONFIG_FILE_PATH=$HOME_PATH/
+
+
+if [ $SOURCE == "VEEVA" && $ENTITY == "HCP" ]; then
+    SOURCE_FILE=$HOME_PATH/veeva/FILE_NAME
+    CONFIG_FILE=$HOME_PATH/veeva/ConfigFile
+    LOG_FILE=$HOME_PATH/veeva/LogFiles
+    if [ -f $SOURCE_FILE && -s $SOURCE_FILE ]; then
+        echo "Generating JSON file ..." >&2
+        java -jar $JAR_FILE_PATH/json_generator.jar $CONFIG_FILE | tee 
+        if [ $? -eq 0 ]; then
+            echo "JSON file generated." >&2
+            java -jar $JAR_FILE_PATH/data_stat.jar hco_file 
