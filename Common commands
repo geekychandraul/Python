@@ -1,0 +1,41 @@
+# to create a a vertiual environment with name project0
+python3.6 -m venv project0
+
+#to initilize the virtual environment
+source project0/bin/activate
+
+#i have set the uri as false in sqlite3 base.py to avoid the error of uri
+
+#to start the progect
+django-admin startproject django_project
+
+#to run the server 
+python manage.py runserver
+# its better to create a shell file or set as an alias to run the server. It saves time.
+
+#to create an app called blog. In Django an app is the functionality. if you like one app and want to use in other project then
+#just drop it in your project
+python manage.py createapp blog
+
+# to create the views edit the /blog/views.pyfirst include
+from Http import HttpResponse
+
+#pass request as parameter in the function and use HttpResponse for the responce.
+
+#Basic html code
+<html lang="en">
+<head>
+  <title>The HTML5 Herald</title>
+</head>
+
+<body>
+</body>
+</html>
+
+#django templates
+{% for post in posts %}
+{% endfor %}
+
+#for if end is endif and endwhile
+#to access the variables the use {{ variables }}
+
